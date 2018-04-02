@@ -2,6 +2,7 @@
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
+using namespace std;
 
 // Please note that the Eigen library does not initialize 
 // VectorXd or MatrixXd objects with zeros upon creation.
@@ -37,17 +38,8 @@ void KalmanFilter::Update(const VectorXd &z) {
   */
   VectorXd z_pred = H_ * x_;
   VectorXd y = z - z_pred;
-  MatrixXd Ht = H_.transpose();
-  MatrixXd S = H_ * P_ * Ht + R_;
-  MatrixXd Si = S.inverse();
-  MatrixXd PHt = P_ * Ht;
-  MatrixXd K = PHt * Si;
 
-  //new estimate
-  x_ = x_ + (K * y);
-  long x_size = x_.size();
-  MatrixXd I = MatrixXd::Identity(x_size, x_size);
-  P_ = (I - K * H_) * P_;
+  UpdateErrorAndEstimation(y);
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
@@ -55,16 +47,24 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   TODO:
     * update the state by using Extended Kalman Filter equations
   */
+  // Convert polar to cartesian
   VectorXd z_pred = VectorXd(3);
+  double rho = sqrt(x_[0]*x_[0] + x_[1]*x_[1]);
   double phi = atan2(x_[1], x_[0]);
-  if (phi > M_PI)       { phi -= 2 * M_PI; }
-  else if (phi < -M_PI) { phi += 2 * M_PI; }
-
-  z_pred << sqrt(x_[0]*x_[0]+x_[1]*x_[1]),
-            phi,
-            (x_[0]*x_[2] + x_[1]*x_[3]) / sqrt(x_[0]*x_[0] + x_[1]*x_[1]);
+  double prime_rho = (x_[0]*x_[2] + x_[1]*x_[3]) / rho;
+  if (fabs(rho) < 1e-4) { prime_rho = 0; }
+  z_pred << rho, phi, prime_rho;
 
   VectorXd y = z - z_pred;
+
+  // Normalize rad
+  if      (y[1] < -M_PI) { y[1] += 2 * M_PI; }
+  else if (y[1] >  M_PI) { y[1] -= 2 * M_PI; }
+
+  UpdateErrorAndEstimation(y);
+}
+
+void KalmanFilter::UpdateErrorAndEstimation(const VectorXd &y) {
   MatrixXd Ht = H_.transpose();
   MatrixXd S = H_ * P_ * Ht + R_;
   MatrixXd Si = S.inverse();
@@ -76,5 +76,4 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   long x_size = x_.size();
   MatrixXd I = MatrixXd::Identity(x_size, x_size);
   P_ = (I - K * H_) * P_;
-
 }
