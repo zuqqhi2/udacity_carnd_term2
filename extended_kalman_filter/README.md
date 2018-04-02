@@ -20,12 +20,12 @@ Simulator is [here](https://github.com/udacity/self-driving-car-sim/releases/).
 
 ## Accuracy of test data
 
-|Term|RMSE Target|Dataset1 Result|
-|:--:|:---------:|:-------------:|
-|px  |< 0.11     |0.0973         |
-|py  |< 0.11     |0.0854         |
-|vx  |< 0.52     |0.4512         |
-|vy  |< 0.52     |0.4396         |
+|Variable|RMSE Target|Dataset1 Result|
+|:------:|:---------:|:-------------:|
+|px      |< 0.11     |0.0973         |
+|py      |< 0.11     |0.0854         |
+|vx      |< 0.52     |0.4512         |
+|vy      |< 0.52     |0.4396         |
 
 [dataset1]: ./images/dataset1-result.png "Accuracy result of dataset1"
 [dataset2]: ./images/dataset2-result.png "Accuracy result of dataset2"
