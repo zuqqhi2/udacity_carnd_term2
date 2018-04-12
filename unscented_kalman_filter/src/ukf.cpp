@@ -29,7 +29,7 @@ UKF::UKF() {
 
   // Process noise standard deviation yaw acceleration in rad/s^2
   std_yawdd_ = 30;
-  
+
   //DO NOT MODIFY measurement noise values below these are provided by the sensor manufacturer.
   // Laser measurement noise standard deviation position1 in m
   std_laspx_ = 0.15;
@@ -46,7 +46,7 @@ UKF::UKF() {
   // Radar measurement noise standard deviation radius change in m/s
   std_radrd_ = 0.3;
   //DO NOT MODIFY measurement noise values above these are provided by the sensor manufacturer.
-  
+
   /**
   TODO:
 
@@ -54,6 +54,10 @@ UKF::UKF() {
 
   Hint: one or more values initialized above might be wildly off...
   */
+  is_initialized_ = false;
+  n_x_ = 5;   // px, py, v, yaw, yawd
+  n_aug_ = 7; // px, py, v, yaw, yawd, nu_x, nu_yawdd
+  lambda_ = 3 - n_aug_;
 }
 
 UKF::~UKF() {}
@@ -69,6 +73,34 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   Complete this function! Make sure you switch between lidar and radar
   measurements.
   */
+
+  if (!is_initialized_) {
+    x_ << 1.0, 1.0, 1.0, 1.0, 0.0;
+    if (meas_package.sensor_type_ == MeasurementPackage::RADAR) {
+      /**
+      Convert radar from polar to cartesian coordinates and initialize state.
+      */
+      double rho = meas_package.raw_measurements_[0];
+      double phi = meas_package.raw_measurements_[1];
+      double prime_rho = meas_package.raw_measurements_[2];
+      x_ << rho       * cos(phi),
+            rho       * sin(phi),
+            prime_rho * cos(phi),
+            prime_rho * sin(phi),
+            0;
+    }
+    else if (meas_package.sensor_type_ == MeasurementPackage::LASER) {
+      /**
+      Initialize state.
+      */
+      x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0, 0, 0;
+    }
+
+    // done initializing, no need to predict or update
+    time_us_ = meas_package.timestamp_;
+    is_initialized_ = true;
+    return;
+  }
 }
 
 /**
