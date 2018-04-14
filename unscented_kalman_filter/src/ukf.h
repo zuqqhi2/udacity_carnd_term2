@@ -104,8 +104,12 @@ public:
   void UpdateRadar(MeasurementPackage meas_package);
 
 
-  void GenerateSigmaPoints(MatrixXd* Xsig_out);
-  void SigmaPointPrediction(double delta_t, MatrixXd* Xsig_out);
+  void GenerateSigmaPoints(double std_a, double std_yawdd, MatrixXd* Xsig_out);
+  void SigmaPointPrediction(double delta_t, MatrixXd &Xsig_aug, MatrixXd* Xsig_out);
+  void PredictMeanAndCovariance(MatrixXd &Xsig_pred, VectorXd* x_pred, MatrixXd* P_pred);
+  void PredictRadarMeasurement(double std_radr, double std_radphi, double std_radrd, MatrixXd &Xsig_pred, VectorXd* z_out, MatrixXd* S_out);
+  void UpdateState(MatrixXd &Xsig_pred, MatrixXd &Zsig, VectorXd &z_pred, MatrixXd &S, VectorXd &z, VectorXd* x_out, MatrixXd* P_out);
+
 };
 
 #endif /* UKF_H */

@@ -18,11 +18,12 @@ Simulator is [here](https://github.com/udacity/self-driving-car-sim/releases/).
     # Run
     ./ExtendedKF
 
+    # Unit Test by https://github.com/catchorg/Catch2
+    ctest
+
     # Lint
     cpplint `find ./src -name *.cpp` 2>&1 | cat > cpplint.xml
 
-    # Unit Test
-    cd test && g++ -std=c++11 sample_test.cpp -o sample_test
 
 ## Accuracy of test data
 

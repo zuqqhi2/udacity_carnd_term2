@@ -28,10 +28,18 @@ target_link_libraries(UnscentedKF z ssl uv uWS)
 
 if(NOT without-test)
   enable_testing()
-  set(utsources test/tools_spec.cpp src/tools.cpp)
-  add_executable(UnitTest ${utsources})
+
+  set(tools_spec_sources test/tools_spec.cpp src/tools.cpp)
+  add_executable(ToolsSpec ${tools_spec_sources})
   add_test(
-    NAME UnitTest
-    COMMAND $<TARGET_FILE:UnitTest>
+    NAME ToolsSpec
+    COMMAND $<TARGET_FILE:ToolsSpec>
+  )
+
+  set(ukf_spec_sources test/ukf_spec.cpp src/tools.cpp src/ukf.cpp)
+  add_executable(UkfSpec ${ukf_spec_sources})
+  add_test(
+    NAME UkfSpec
+    COMMAND $<TARGET_FILE:UkfSpec>
   )
 endif()

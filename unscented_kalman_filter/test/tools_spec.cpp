@@ -8,7 +8,7 @@ using Eigen::VectorXd;
 using Eigen::MatrixXd;
 using std::vector;
 
-TEST_CASE("CalculateRMSE", "[calculatermse]") {
+TEST_CASE("CalculateRMSE", "[calculate_rmse]") {
   Tools tools;
   VectorXd estimation = VectorXd(4);
   VectorXd gt_values  = VectorXd(4);
