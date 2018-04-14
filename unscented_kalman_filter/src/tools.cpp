@@ -20,7 +20,7 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
   VectorXd rmse(4);
   rmse.fill(0.0);
 
-  //Check element numbers
+  // Check element numbers
   if (size != ground_truth.size() || estimations.size() == 0) {
     return rmse;
   }
@@ -35,4 +35,6 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
   // Calcuate mean & square root
   rmse /= size;
   rmse = rmse.array().sqrt();
+
+  return rmse;
 }
