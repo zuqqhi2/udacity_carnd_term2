@@ -18,6 +18,12 @@ Simulator is [here](https://github.com/udacity/self-driving-car-sim/releases/).
     # Run
     ./ExtendedKF
 
+    # Lint
+    cpplint `find ./src -name *.cpp` 2>&1 | cat > cpplint.xml
+
+    # Unit Test
+    cd test && g++ -std=c++11 sample_test.cpp -o sample_test
+
 ## Accuracy of test data
 
 |Variable|RMSE Target|Dataset1 Result|
