@@ -110,7 +110,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
     // Radar updates
   } else {
     // Laser updates
-    UpdateLidar(meas_package);
+    // UpdateLidar(meas_package);
   }
 
 }
@@ -127,49 +127,15 @@ void UKF::Prediction(double delta_t) {
   Complete this function! Estimate the object's location. Modify the state
   vector, x_. Predict sigma points, the state, and the state covariance matrix.
   */
-  MatrixXd Xsig_aug = MatrixXd(n_aug_, 2 * n_aug_ + 1);
-  MatrixXd Xsig_pred = MatrixXd(n_x_, 2 * n_aug_ + 1);
+  int n_sigma_points = 2 * n_aug_ + 1;
+
+  MatrixXd Xsig_aug = MatrixXd(n_aug_, n_sigma_points);
   GenerateSigmaPoints(std_a_, std_yawdd_, &Xsig_aug);
+
+  MatrixXd Xsig_pred = MatrixXd(n_sigma_points, n_x_);
   SigmaPointPrediction(delta_t, Xsig_aug, &Xsig_pred);
 
-  //create vector for weights
-  VectorXd weights = VectorXd(2 * n_aug_ + 1);
-
-  //create vector for predicted state
-  VectorXd x = VectorXd(n_x_);
-
-  //create covariance matrix for prediction
-  MatrixXd P = MatrixXd(n_x_, n_x_);
-
-  // set weights
-  double weight_0 = lambda_ / (lambda_ + n_aug_);
-  weights(0) = weight_0;
-  for (int i = 1; i < 2 * n_aug_ + 1; i++) {  //2n+1 weights
-    double weight = 0.5 / (n_aug_ + lambda_);
-    weights(i) = weight;
-  }
-
-  //predicted state mean
-  x.fill(0.0);
-  for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
-    x = x+ weights(i) * Xsig_pred.col(i);
-  }
-
-  //predicted state covariance matrix
-  P.fill(0.0);
-  for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
-    // state difference
-    VectorXd x_diff = Xsig_pred.col(i) - x;
-    //angle normalization
-    while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
-    while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
-
-    P = P + weights(i) * x_diff * x_diff.transpose() ;
-  }
-
-  // Update
-  x_ = x;
-  P_ = P;
+  PredictMeanAndCovariance(Xsig_pred, &x_, &P_);
 }
 
 /**
@@ -222,6 +188,12 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
   You'll also need to calculate the radar NIS.
   */
+  VectorXd z_out = VectorXd(3);
+  MatrixXd S_out = MatrixXd(3, 3);
+  PredictRadarMeasurement(std_radr_, std_radphi_, std_radrd_, Xsig_pred, &z_out, &S_out);
+
+
+  UpdateState(MatrixXd &Xsig_pred, MatrixXd &Zsig, z_pred, S_out, meas_package.raw_measurements_, &x_, &P_);
 }
 
 
