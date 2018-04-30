@@ -422,8 +422,7 @@ void UKF::PredictRadarMeasurement(double std_radr, double std_radphi,
     VectorXd z_diff = Zsig.col(i) - z_pred;
 
     // angle normalization
-    while (z_diff(1) >  M_PI) z_diff(1)-=2.*M_PI;
-    while (z_diff(1) < -M_PI) z_diff(1)+=2.*M_PI;
+    z_diff(1) = NormalizeAngle(z_diff(1));
 
     S = S + weights_(i) * z_diff * z_diff.transpose();
   }
@@ -462,16 +461,14 @@ void UKF::UpdateState(MeasurementPackage::SensorType sensor_type, MatrixXd &Xsig
     VectorXd z_diff = Zsig.col(i) - z_pred;
     // angle normalization
     if (sensor_type == MeasurementPackage::RADAR) {
-      while (z_diff(1) >  M_PI) z_diff(1) -= 2. * M_PI;
-      while (z_diff(1) < -M_PI) z_diff(1) += 2. * M_PI;
+      z_diff(1) = NormalizeAngle(z_diff(1));
     }
 
     // state difference
     VectorXd x_diff = Xsig_pred.col(i) - x_;
     // angle normalization
     if (sensor_type == MeasurementPackage::RADAR) {
-      while (x_diff(3) >  M_PI) x_diff(3) -= 2. * M_PI;
-      while (x_diff(3) < -M_PI) x_diff(3) += 2. * M_PI;
+      x_diff(3) = NormalizeAngle(x_diff(3));
     }
 
     Tc = Tc + weights_(i) * x_diff * z_diff.transpose();
@@ -485,8 +482,7 @@ void UKF::UpdateState(MeasurementPackage::SensorType sensor_type, MatrixXd &Xsig
 
   // angle normalization
   if (sensor_type == MeasurementPackage::RADAR) {
-    while (z_diff(1) >  M_PI) z_diff(1) -= 2. * M_PI;
-    while (z_diff(1) < -M_PI) z_diff(1) += 2. * M_PI;
+    z_diff(1) = NormalizeAngle(z_diff(1));
   }
 
   // Update NIS
@@ -503,4 +499,11 @@ void UKF::UpdateState(MeasurementPackage::SensorType sensor_type, MatrixXd &Xsig
   // write result
   *x_out = x;
   *P_out = P;
+}
+
+double UKF::NormalizeAngle(double angle) {
+  while (angle >  M_PI) angle -= 2. * M_PI;
+  while (angle < -M_PI) angle += 2. * M_PI;
+
+  return angle;
 }

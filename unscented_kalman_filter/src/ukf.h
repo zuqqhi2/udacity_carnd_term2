@@ -127,7 +127,7 @@ public:
     double std_radrd, MatrixXd &Xsig_pred, MatrixXd* Zsig_out, VectorXd* z_out, MatrixXd* S_out);
   void UpdateState(MeasurementPackage::SensorType sensor_type, MatrixXd &Xsig_pred,
     MatrixXd &Zsig, VectorXd &z_pred, MatrixXd &S, VectorXd &z, VectorXd* x_out, MatrixXd* P_out);
-
+  double NormalizeAngle(double angle);
 };
 
 #endif /* UKF_H */
