@@ -67,7 +67,16 @@ public:
   ///* Sigma point spreading parameter
   double lambda_;
 
+  //=============================================
+  // Original Variables
+
+  // Number of sigma points
   int n_sigma_points_;
+
+  // Latest NIS value
+  double NIS_laser_;
+  double NIS_radar_;
+
 
   /**
    * Constructor
@@ -105,11 +114,19 @@ public:
   void UpdateRadar(MeasurementPackage meas_package);
 
 
+  //=============================================
+  // Original Functions
   void GenerateSigmaPoints(double std_a, double std_yawdd, MatrixXd* Xsig_out);
-  void SigmaPointPrediction(double delta_t, MatrixXd &Xsig_aug, MatrixXd* Xsig_out);
-  void PredictMeanAndCovariance(MatrixXd &Xsig_pred, VectorXd* x_pred, MatrixXd* P_pred);
-  void PredictRadarMeasurement(double std_radr, double std_radphi, double std_radrd, MatrixXd &Xsig_pred, MatrixXd* Zsig_out, VectorXd* z_out, MatrixXd* S_out);
-  void UpdateState(MatrixXd &Xsig_pred, MatrixXd &Zsig, VectorXd &z_pred, MatrixXd &S, VectorXd &z, VectorXd* x_out, MatrixXd* P_out);
+  void SigmaPointPrediction(double delta_t,
+    MatrixXd &Xsig_aug, MatrixXd* Xsig_out);
+  void PredictMeanAndCovariance(MatrixXd &Xsig_pred,
+    VectorXd* x_pred, MatrixXd* P_pred);
+  void PredictLidarMeasurement(double std_laspx, double std_laspy,
+    MatrixXd &Xsig_pred, MatrixXd* Zsig_out, VectorXd* z_out, MatrixXd* S_out);
+  void PredictRadarMeasurement(double std_radr, double std_radphi,
+    double std_radrd, MatrixXd &Xsig_pred, MatrixXd* Zsig_out, VectorXd* z_out, MatrixXd* S_out);
+  void UpdateState(MeasurementPackage::SensorType sensor_type, MatrixXd &Xsig_pred,
+    MatrixXd &Zsig, VectorXd &z_pred, MatrixXd &S, VectorXd &z, VectorXd* x_out, MatrixXd* P_out);
 
 };
 

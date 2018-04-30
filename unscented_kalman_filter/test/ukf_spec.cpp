@@ -234,7 +234,7 @@ TEST_CASE("UpdateState", "[update_state]") {
             -0.00071719,   0.00358884,   0.00171811,   0.00669426,   0.00881797;
 
   // Execute test target function
-  ukf.UpdateState(Xsig_pred, Zsig, z_pred, S, z, &x_out, &P_out);
+  ukf.UpdateState(MeasurementPackage::RADAR, Xsig_pred, Zsig, z_pred, S, z, &x_out, &P_out);
 
   // Check result
   for (int i = 0; i < ukf.n_x_; i++) {
