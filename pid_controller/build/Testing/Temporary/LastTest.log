@@ -1,0 +1,69 @@
+Start testing: May 29 13:16 UTC
+----------------------------------------------------------
+1/1 Testing: pid_spec
+1/1 Test: pid_spec
+Command: "/work/build/pid_spec"
+Directory: /work/build
+"pid_spec" start time: May 29 13:16 UTC
+Output:
+----------------------------------------------------------
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pid_spec is a Catch v2.2.2 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+Scenario: PID can control vehicle with PID controll method
+     Given: A PID object
+      When: UpdateError is called three times
+      Then: I's error is 0.7
+-------------------------------------------------------------------------------
+/work/test/pid_spec.cpp:30
+...............................................................................
+
+/work/test/pid_spec.cpp:31: FAILED:
+  REQUIRE( std::fabs(pid.i_error - 0.7) < 1e-6 )
+with expansion:
+  0.7 < 0.000001
+
+-------------------------------------------------------------------------------
+Scenario: PID can control vehicle with PID controll method
+     Given: A PID object
+      When: UpdateError is called three times
+      Then: D's error is 0.2
+-------------------------------------------------------------------------------
+/work/test/pid_spec.cpp:33
+...............................................................................
+
+/work/test/pid_spec.cpp:34: FAILED:
+  REQUIRE( std::fabs(pid.d_error - 0.2) < 1e-6 )
+with expansion:
+  0.1 < 0.000001
+
+-------------------------------------------------------------------------------
+Scenario: PID can control vehicle with PID controll method
+     Given: A PID object
+      When: TotalError is called
+      Then: total error is -0.24
+-------------------------------------------------------------------------------
+/work/test/pid_spec.cpp:42
+...............................................................................
+
+/work/test/pid_spec.cpp:43: FAILED:
+  REQUIRE( std::fabs(total_err + 0.24) < 1e-6 )
+with expansion:
+  0.36 < 0.000001
+
+===============================================================================
+test cases: 1 | 1 failed
+assertions: 7 | 4 passed | 3 failed
+
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Failed.
+"pid_spec" end time: May 29 13:16 UTC
+"pid_spec" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: May 29 13:16 UTC

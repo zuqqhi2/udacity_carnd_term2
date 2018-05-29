@@ -1,0 +1,5 @@
+/work/build/CMakeFiles/test.dir
+/work/build/CMakeFiles/pid.dir
+/work/build/CMakeFiles/rebuild_cache.dir
+/work/build/CMakeFiles/pid_spec.dir
+/work/build/CMakeFiles/edit_cache.dir
