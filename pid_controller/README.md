@@ -40,14 +40,17 @@ To find better value, I used same way of steering.
 
 Following movie is P control result.
 P component can let vehicle keep on center but oscillating. So, speed up causes strong oscillating.
+
 ![P Control][pcontrol]
 
 Following movie is PD control result.
 D component solves oscillating problem. But, if I always add 0.3 bias to steer, PD control let vehicle keep on center + 0.3 line.
+
 ![PD Control][pdcontrol]
 
 Following movie is PID control result.
 I component causes oscillating for first some seconds but it solves bias problem(I keep adding 0.3 to steer in following movie as well).
+
 ![PID Control][pidcontrol]
 
 Note: I turned off throttle control above movies.
