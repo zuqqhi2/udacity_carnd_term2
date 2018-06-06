@@ -126,9 +126,9 @@ int main() {
           double new_y = 0;
           double new_psi = -v * cur_delta * actuator_delay_sec / mpc.Lf;
           double new_v = v + cur_a * actuator_delay_sec;
-          double new_cte = coeffs[0];
-          double new_epsi = -atan(coeffs[1]) -
-                            (v * atan(coeffs[1]) * actuator_delay_sec / mpc.Lf);
+          double new_cte = coeffs[0] + v * sin(cur_delta) * actuator_delay_sec;
+          double new_epsi =
+              -cur_delta - (v * cur_delta * actuator_delay_sec / mpc.Lf);
 
           //=====================================
           // Find best actuator values

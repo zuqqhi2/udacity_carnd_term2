@@ -6,6 +6,7 @@
 using CppAD::AD;
 
 // TODO: Set the timestep length and duration
+// from review : common choice is N=10, dt=0.1
 size_t N = 15;
 double dt = 0.1;
 
@@ -22,7 +23,7 @@ double dt = 0.1;
 // const double Lf = 2.67;
 
 // Both the reference cross track and orientation errors are 0.
-// The reference velocity is set to 40 mph.
+// The reference velocity is set to 60 mph.
 double ref_v = 60;
 
 // The solver takes all the state variables and actuator

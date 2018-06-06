@@ -71,6 +71,9 @@ If N times dt equals 10, it means the controller uses data between current state
 
 Both of too short term and too long term cause of bad accuracy. If the controller uses short term data the controller cannot treat sharp curve. If the controller uses long term data fitting will be complex and sensor value may be not accurate in real world.
 
+In addition to it, small dt let control value become more accurate but it requires large N.
+And then large N requires computational power.
+
 I tried many patterns but I'll show 1 good pattern and 5 extreme examples. And I chosen 1st one(N=15, dt=0.1) because it works.
 
 |N   |dt    |Result |
@@ -112,9 +115,8 @@ double new_x = v * actuator_delay_sec;
 double new_y = 0;
 double new_psi = -v * cur_delta * actuator_delay_sec / mpc.Lf;
 double new_v = v + cur_a * actuator_delay_sec;
-double new_cte = coeffs[0];
-double new_epsi = -atan(coeffs[1]) -
-                  (v * atan(coeffs[1]) * actuator_delay_sec / mpc.Lf);
+double new_cte = coeffs[0] + v * sin(cur_delta) * actuator_delay_sec;
+double new_epsi = -cur_delta - (v * cur_delta * actuator_delay_sec / mpc.Lf);
 ```
 
 
